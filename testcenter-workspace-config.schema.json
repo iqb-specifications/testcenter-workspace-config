@@ -6,125 +6,291 @@
   "type": "object",
   "properties": {
     "workspaceName": {
-      "$ref": "#/$defs/languageTaggedText"
-    },
-    "workspaceDescription": {
-      "$ref": "#/$defs/languageTaggedText"
-    },
-    "sources": {
-      "description": "List of all scales providing it's value to this scale",
+      "description": "Language tagged name of the workspace",
       "type": "array",
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/languageTaggedString"
       },
       "minItems": 1
     },
-    "method": {
-      "description": "Way how to process the scale values.",
-      "type": "string",
-      "enum": [
-        "SUM",
-        "MEAN",
-        "MAP"
-      ],
-      "default": "MAP"
-    },
-    "publicVocabularyUrl": {
-      "description": "Url of a public vocabulary matching this scale.",
-      "type": "string"
-    },
-    "mappings": {
-      "description": "Applies the method MAP to the value. The first match will go.",
+    "workspaceDescription": {
+      "description": "Language tagged description of the workspace",
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "method": {
-            "type": "string",
-            "description": "Condition for evaluation",
-            "enum": [
-              "EQUALS",
-              "LESS_THAN",
-              "MORE_THAN",
-              "MAX",
-              "MIN"
-            ]
-          },
-          "parameters": {
-            "type": "array",
-            "description": "Depending on the method, additional parameter(s) is needed.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "newValue": {
-            "$ref": "#/$defs/newValue"
-          }
-        },
-        "required": [
-          "method",
-          "parameters",
-          "newValue"
-        ],
-        "additionalProperties": false
-      }
+        "$ref": "#/$defs/languageTaggedString"
+      },
+      "minItems": 1
     },
-    "mappingsElse": {
-      "$ref": "#/$defs/newValue"
+    "globalLanguageFiles": {
+      "description": "List of files to be used for i18n replacement. Booklets can use additional language files as overlay (replacement of specific text).",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/languageTaggedString"
+      },
+      "minItems": 1
+    },
+    "bookletConfigs": {
+      "description": "List of all configuration sets that can be used in that workspace.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bookletConfig"
+      }
     }
   },
   "required": [
-    "id",
-    "name",
-    "sources"
+    "workspaceName"
   ],
   "additionalProperties": false,
   "$defs": {
-    "languageTaggedText": {
-      "description": "Language tagged text",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "lang": {
-            "description": "ISO-language code",
-            "type": "string",
-            "minLength": 1,
-            "pattern": "^[a-z]{2}$"
-          },
-          "value": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "lang",
-          "value"
-        ],
-        "additionalProperties": false
-      },
-      "minItems": 1
+    "languageCode": {
+      "description": "ISO-language code",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z]{2}$",
+      "default": "de"
     },
-    "newValue": {
-      "description": "Properties for the new value for scaleType DERIVED",
+    "languageTaggedString": {
       "type": "object",
       "properties": {
+        "lang": {
+          "$ref": "#/$defs/languageCode"
+        },
         "value": {
-          "description": "Value as outcome of this scale",
-          "type": "number"
-        },
-        "label": {
-          "$ref": "#/$defs/languageTaggedText"
-        },
-        "description": {
-          "$ref": "#/$defs/languageTaggedText"
-        },
-        "publicVocabularyEntry": {
-          "description": "Url-suffix for a specific entry of a public vocabulary.",
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
+        "lang",
         "value"
+      ],
+      "additionalProperties": false
+    },
+    "bookletConfig": {
+      "description": "Configuration for one booklet",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID to be used in booklets",
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "browser": {
+          "description": "Browser settings",
+          "type": "object",
+          "properties": {
+            "askForFullScreen": {
+              "description": "If true, Testtaker will be prompted to set the browser full screen.",
+              "type": "boolean",
+              "default": false
+            },
+            "preventNavigationByBrowser": {
+              "description": "<browserBehaviour> If true, the standard navigation handling (buttons) of the browser will not work.",
+              "type": "boolean",
+              "default": false
+            },
+            "additionalProperties": false
+          }
+        },
+        "controller": {
+          "description": "Test controller settings",
+          "type": "object",
+          "properties": {
+            "forcePresentationComplete": {
+              "description": "Precondition for leaving a unit: On presentation complete.",
+              "type": "string",
+              "enum": [
+                "ON",
+                "OFF",
+                "ALWAYS"
+              ],
+              "default": "OFF"
+            },
+            "forceResponsesComplete": {
+              "description": "Precondition for leaving a unit: On responses complete.",
+              "type": "string",
+              "enum": [
+                "ON",
+                "OFF",
+                "ALWAYS"
+              ],
+              "default": "OFF"
+            },
+            "lazyLoading": {
+              "description": "<loading_mode> If true, the first unit will be presented after loading the first block. If false, all content files must be loaded to start the booklet.",
+              "type": "boolean",
+              "default": true
+            },
+            "logPolicy": {
+              "description": "Limit logging to prevent unnecessary traffic.",
+              "type": "string",
+              "enum": [
+                "DISABLED",
+                "LEAN",
+                "RICH",
+                "DEBUG"
+              ],
+              "default": "RICH"
+            },
+            "lockTestOnTermination": {
+              "description": "If true, the test will be locked by termination request to prevent any changes.",
+              "type": "boolean",
+              "default": false
+            },
+            "silentMode": {
+              "description": "If true, all messages for the testtaker will be supressed (no diversion).",
+              "type": "boolean",
+              "default": false
+            },
+            "sendBufferTime": {
+              "description": "Time settings for the controller to wait before sending data to the backend (ms).",
+              "type": "object",
+              "properties": {
+                "unitResponses": {
+                  "type": "integer",
+                  "default": 5000
+                },
+                "unitState": {
+                  "type": "integer",
+                  "default": 6000
+                },
+                "testState": {
+                  "type": "integer",
+                  "default": 1000
+                },
+                "additionalProperties": false
+              }
+            },
+            "timeLeftWarnings": {
+              "description": "Minutes before block time is over the controller will send a warning message to testtaker.",
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": [1, 5]
+            },
+            "additionalProperties": false
+          }
+        },
+        "userInterface": {
+          "description": "Elements on screen: content and behavoir",
+          "type": "object",
+          "properties": {
+            "header": {
+              "description": "<header_hidden/header_content> Sets the content of the top header area.",
+              "type": "string",
+              "enum": [
+                "EMPTY",
+                "OFF",
+                "BOOKLET_LABEL",
+                "BLOCK_LABEL",
+                "UNIT_LABEL"
+              ],
+              "default": "UNIT_LABEL"
+            },
+            "mainForwardButton": {
+              "description": "Behavoir of the primary navigation button: Forward",
+              "type": "string",
+              "enum": [
+                "HIDDEN",
+                "DYNAMIC",
+                "UNITS",
+                "PAGES"
+              ],
+              "default": "HIDDEN"
+            },
+            "mainBackwardButton": {
+              "description": "Behavoir of the primary navigation button: Backward",
+              "type": "string",
+              "enum": [
+                "HIDDEN",
+                "DYNAMIC",
+                "UNITS",
+                "PAGES"
+              ],
+              "default": "HIDDEN"
+            },
+            "unitLabel": {
+              "description": "Label to represent the unit",
+              "type": "string",
+              "enum": [
+                "HIDDEN",
+                "INDEX",
+                "LABEL"
+              ],
+              "default": "INDEX"
+            },
+            "unitPages": {
+              "description": "Elements for the pages of an unit",
+              "type": "object",
+              "properties": {
+                "pageLabel": {
+                  "description": "Label to represent the unit page(s)",
+                  "type": "string",
+                  "enum": [
+                    "HIDDEN",
+                    "INDEX",
+                    "LABEL",
+                    "LIST"
+                  ],
+                  "default": "INDEX"
+                },
+                "navigationButtons": {
+                  "description": "If true, the unit page labels act as buttons for navigation between pages.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "pagingMode": {
+                  "description": "Instruction sent to the player to design the paging behavoir.",
+                  "type": "string",
+                  "enum": [
+                    "SEPARATE",
+                    "CONCAT_SCROLL",
+                    "CONCAT_SCROLL_SNAP",
+                    "BUTTONS"
+                  ],
+                  "default": "SEPARATE"
+                },
+                "restoreSelectedPageOnReturn": {
+                  "description": "If true, the unit page selected before reload will be set as current.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "additionalProperties": false
+              }
+            },
+            "toolBar": {
+              "description": "Elements on toolbar area",
+              "type": "object",
+              "properties": {
+                "fullScreenButton": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "reloadButton": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeLeft": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "unitList": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "id"
       ],
       "additionalProperties": false
     }

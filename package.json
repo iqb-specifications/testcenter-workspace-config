@@ -2,7 +2,7 @@
   "name": "@iqbspecs/testcenter-workspace-config",
   "author": "IQB - Institut zur Qualitätsentwicklung im Bildungswesen",
   "license": "CC0-1.0",
-  "description": "Specification for assessment content package: Derived Scale.",
+  "description": "Specification for central parameters of one Testcenter workspace.",
   "scripts": {
     "validate-schema": "test-schema test acp-scale-derived.schema.json",
     "async_generate": "asyncapi generate fromTemplate asyncapi.yaml @asyncapi/html-template --param config=asyncapi.config.json -o ./public --force-write --use-new-generator",
