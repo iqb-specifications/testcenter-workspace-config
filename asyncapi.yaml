@@ -1,0 +1,24 @@
+asyncapi: 3.0.0
+id: "urn:iqb-specifications:testcenter-workspace-config"
+defaultContentType: application/json
+info:
+  title: "acp-scale-derived"
+  description: "Specification for assessment content package: Testcenter Workspace Config."
+  license:
+    name: CC0 1.0
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  version: " - click on schema id to expand"
+  contact:
+    name: Home of iqb-specifications (German only)
+    url: https://iqb-specifications.github.io/
+channels:
+  iqb_data_structures:
+    address: iqb_data_structures
+    messages:
+      select_schema:
+        payload:
+          $ref: "#/components/schemas/testcenter-workspace-config"
+components:
+  schemas:
+    testcenter-workspace-config:
+      $ref: "testcenter-workspace-config.schema.json"

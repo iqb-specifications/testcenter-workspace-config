@@ -1,0 +1,24 @@
+{
+  "name": "@iqbspecs/testcenter-workspace-config",
+  "author": "IQB - Institut zur Qualitätsentwicklung im Bildungswesen",
+  "license": "CC0-1.0",
+  "description": "Specification for assessment content package: Derived Scale.",
+  "scripts": {
+    "validate-schema": "test-schema test acp-scale-derived.schema.json",
+    "async_generate": "asyncapi generate fromTemplate asyncapi.yaml @asyncapi/html-template --param config=asyncapi.config.json -o ./public --force-write --use-new-generator",
+    "generate_docs": "npm run async_generate && cat add.css >> ./public/css/global.min.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iqb-specifications/testcenter-workspace-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iqb-specifications/testcenter-workspace-config/issues"
+  },
+  "homepage": "https://github.com/iqb-specifications/testcenter-workspace-config#readme",
+  "devDependencies": {
+    "@asyncapi/cli": "^4.1.1",
+    "@asyncapi/html-template": "^3.1.0",
+    "@iqbspecs/validate-json": "^0.4.0"
+  }
+}
