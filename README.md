@@ -12,9 +12,8 @@ Read more:
 
 # Erläuterung der Spezifikation
 
-### `DERIVED`
 
-Abgeleitete Skalen transformieren den Wert aus einer anderen Skala oder fassen Ergebnisse anderer Skalen zusammen.
+Es darf nur eine Datei mit dieser Spezifikation in einem Workspace des Testcenters liegen. Diese hat den reservierten Namen `workspace-config.json`.
 
 * `workspaceName`, `workspaceDescription`: Ein Name und optional eine Beschreibung unterstützen die UI (sprachdifferenziert). 
 
