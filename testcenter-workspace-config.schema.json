@@ -21,13 +21,12 @@
       },
       "minItems": 1
     },
-    "globalLanguageFiles": {
-      "description": "List of files to be used for i18n replacement. Booklets can use additional language files as overlay (replacement of specific text).",
+    "textReplacementFiles": {
+      "description": "List of file names to be used for text replacement (format standard i18n). Booklets and logins can use additional text replacement files as overlay (replacement of specific text). If the file is not found for an requested language, the default text will be used instead.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/languageTaggedString"
-      },
-      "minItems": 1
+      }
     },
     "bookletConfigs": {
       "description": "List of all configuration sets that can be used in that workspace.",
@@ -44,7 +43,7 @@
       }
     },
     "loginDesigns": {
-      "description": "List of all settings that can be used in that workspace for group monitors.",
+      "description": "Sets of parameters to be applied to a test design after logging in. If incomplete, the default or system wide design will be overwritten only partly.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/loginDesign"
@@ -108,7 +107,6 @@
       "additionalProperties": false
     },
     "bookletConfig": {
-      "description": "Configuration for one booklet",
       "type": "object",
       "properties": {
         "id": {
@@ -123,6 +121,11 @@
         },
         "language": {
           "$ref": "#/$defs/languageCode"
+        },
+        "textReplacementFile": {
+          "description": "Files to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
+          "type": "string",
+          "minLength": 1
         },
         "browser": {
           "description": "Browser settings",
@@ -345,7 +348,6 @@
     },
     "groupMonitorProfile": {
       "type": "object",
-      "description": "Settings for the view 'group monitor'.",
       "properties": {
         "id": {
           "description": "ID to be used in logins.",
@@ -472,6 +474,13 @@
             }
           },
           "additionalProperties": false
+        },
+        "textReplacementFiles": {
+          "description": "List of files to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageTaggedString"
+          }
         }
       },
       "additionalProperties": false,
@@ -480,7 +489,6 @@
       ]
     },
     "loginDesign": {
-      "description": "A set of parameters to be applied to a test design after logging in. If incomplete, the default or system wide design will be overwritten only partly.",
       "type": "object",
       "properties": {
         "id": {
@@ -489,7 +497,7 @@
           "minLength": 1
         },
         "useAsDefaultFor": {
-          "description": "Scope this design is to be used as default. Any uncomplete design will overwrite this default only partly.",
+          "description": "Scope this design is to be used as default. Any incomplete design will overwrite this default only partly.",
           "type": "string",
           "enum": [
             "GROUP_MONITOR",
@@ -497,6 +505,13 @@
             "RUN",
             "SYSTEM_CHECK"
           ]
+        },
+        "textReplacementFiles": {
+          "description": "List of file names to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageTaggedString"
+          }
         },
         "styling": {
           "description": "Every testcenter installation holds sets of design parameters. With this property, you refer to one of these sets.",
@@ -529,7 +544,7 @@
                 ]
               },
               "filename": {
-                "description": "Name of the image file located in the workspace. If not found, the default image will be used.",
+                "description": "Name of the image file located in the workspace. If not found, the default image will be used instead.",
                 "type": "string",
                 "minLength": 1
               }
