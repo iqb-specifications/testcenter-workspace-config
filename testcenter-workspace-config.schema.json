@@ -35,6 +35,13 @@
       "items": {
         "$ref": "#/$defs/bookletConfig"
       }
+    },
+    "groupMonitorProfiles": {
+      "description": "List of all settings that can be used in that workspace for group monitors.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/groupMonitorProfile"
+      }
     }
   },
   "required": [
@@ -91,9 +98,9 @@
               "description": "<browserBehaviour> If true, the standard navigation handling (buttons) of the browser will not work.",
               "type": "boolean",
               "default": false
-            },
-            "additionalProperties": false
-          }
+            }
+          },
+          "additionalProperties": false
         },
         "controller": {
           "description": "Test controller settings",
@@ -160,9 +167,9 @@
                 "testState": {
                   "type": "integer",
                   "default": 1000
-                },
-                "additionalProperties": false
-              }
+                }
+              },
+              "additionalProperties": false
             },
             "timeLeftWarnings": {
               "description": "Minutes before block time is over the controller will send a warning message to testtaker.",
@@ -170,10 +177,13 @@
               "items": {
                 "type": "integer"
               },
-              "default": [1, 5]
-            },
-            "additionalProperties": false
-          }
+              "default": [
+                1,
+                5
+              ]
+            }
+          },
+          "additionalProperties": false
         },
         "userInterface": {
           "description": "Elements on screen: content and behavoir",
@@ -244,7 +254,7 @@
                   "default": true
                 },
                 "pagingMode": {
-                  "description": "Instruction sent to the player to design the paging behavoir.",
+                  "description": "The value will be sent to the player to set its paging behavoir.",
                   "type": "string",
                   "enum": [
                     "SEPARATE",
@@ -258,9 +268,9 @@
                   "description": "If true, the unit page selected before reload will be set as current.",
                   "type": "boolean",
                   "default": false
-                },
-                "additionalProperties": false
-              }
+                }
+              },
+              "additionalProperties": false
             },
             "toolBar": {
               "description": "Elements on toolbar area",
@@ -281,18 +291,139 @@
                 "unitList": {
                   "type": "boolean",
                   "default": false
-                },
-                "additionalProperties": false
-              }
-            },
-            "additionalProperties": false
-          }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
         "id"
       ],
       "additionalProperties": false
+    },
+    "groupMonitorProfile": {
+      "type": "object",
+      "description": "Settings for the view 'group monitor'.",
+      "properties": {
+        "id": {
+          "description": "ID to be used in logins",
+          "type": "string",
+          "minLength": 1
+        },
+        "columns": {
+          "description": "Show columns in main table",
+          "type": "object",
+          "properties": {
+            "block": {
+              "type": "boolean",
+              "default": false
+            },
+            "unit": {
+              "type": "boolean",
+              "default": false
+            },
+            "group": {
+              "type": "boolean",
+              "default": true
+            },
+            "booklet": {
+              "type": "boolean",
+              "default": false
+            },
+            "bookletStates": {
+              "description": "This setting shows/hides the column of states a booklet can define. A booklet state contains a parameter 'show in group monitor' to be selected.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "detailView": {
+          "type": "string",
+          "description": "Number of details in view.",
+          "enum": [
+            "MAX",
+            "MEDIUM",
+            "MIN"
+          ]
+        },
+        "autoselectNextBlock": {
+          "description": "If true, the next block will be selected after a block operation. If no, the current block remains selected to prevent unintended operations.",
+          "type": "boolean",
+          "default": false
+        },
+        "testFilters": {
+          "type": "object",
+          "properties": {
+            "pending": {
+              "description": "If true, pending tests will be hidden.",
+              "type": "boolean",
+              "default": false
+            },
+            "locked": {
+              "description": "If true, locked tests will be hidden.",
+              "type": "boolean",
+              "default": false
+            },
+            "conditionalFilters": {
+              "description": "Rules operator is 'OR', so if one rule matches, the test will be hidden and the other rules are skipped.",
+              "type": "array",
+              "items": {
+                "description": "If rule expression result is 'true', the test will be hidden.",
+                "type": "object",
+                "properties": {
+                  "sourceProperty": {
+                    "type": "string",
+                    "enum": [
+                      "BOOKLET_LABEL",
+                      "PERSON_LABEL",
+                      "STATE",
+                      "BLOCK_LABEL",
+                      "GROUP_NAME",
+                      "BOOKLET_ID",
+                      "UNIT_ID",
+                      "UNIT_LABEL",
+                      "BLOCK_ID",
+                      "TEST_STATE",
+                      "MODE",
+                      "BOOKLET_SPECIES",
+                      "BOOKLET_STATES"
+                    ]
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "EQUALS",
+                      "EQUALS_REGEX",
+                      "CONTAINS",
+                      "EQUALS_NOT",
+                      "EQUALS_REGEX_NOT",
+                      "CONTAINS_NOT"
+                    ]
+                  },
+                  "methodParameter": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "sourceProperty",
+                  "method",
+                  "methodParameter"
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
     }
   }
 }

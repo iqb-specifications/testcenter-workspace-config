@@ -2,7 +2,7 @@ asyncapi: 3.0.0
 id: "urn:iqb-specifications:testcenter-workspace-config"
 defaultContentType: application/json
 info:
-  title: "acp-scale-derived"
+  title: "testcenter-workspace-config"
   description: "Specification for assessment content package: Testcenter Workspace Config."
   license:
     name: CC0 1.0
