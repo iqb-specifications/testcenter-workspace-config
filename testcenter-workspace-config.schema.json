@@ -49,6 +49,33 @@
       "items": {
         "$ref": "#/$defs/loginDesign"
       }
+    },
+    "publicBooklets": {
+      "description": "These booklets are listed on start page of the testcenter and do not need credentials. This can be used for demo items or open system checks.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "lang": {
+            "$ref": "#/$defs/languageCode"
+          },
+          "name": {
+            "description": "The name will be used as title or button label.",
+            "type": "string",
+            "minLength": 3
+          },
+          "loginName": {
+            "description": "Login to be used. This login must be found in any testtaker file of the workspace.",
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "loginName"
+        ]
+      }
     }
   },
   "required": [
@@ -367,6 +394,16 @@
             "MIN"
           ]
         },
+        "presentBookletList": {
+          "description": "Offers the booklets of the group to have a look at the test content.",
+          "type": "string",
+          "enum": [
+            "OFF",
+            "BUTTONS_LIST",
+            "BUTTONS_LIST_COLLAPSED"
+          ],
+          "default": "OFF"
+        },
         "autoselectNextBlock": {
           "description": "If true, the next block will be selected after a block operation. If no, the current block remains selected to prevent unintended operations.",
           "type": "boolean",
@@ -468,7 +505,8 @@
             "PRIMARY",
             "SECONDARY",
             "ADULT"
-          ]
+          ],
+          "default": "SECONDARY"
         },
         "images": {
           "description": "These image files will replace default or system wide images.",
@@ -491,7 +529,7 @@
                 ]
               },
               "filename": {
-                "description": "Name of the image file to be loaded in the workspace.",
+                "description": "Name of the image file located in the workspace. If not found, the default image will be used.",
                 "type": "string",
                 "minLength": 1
               }
@@ -502,6 +540,23 @@
               "filename"
             ]
           }
+        },
+        "codeInputMode": {
+          "description": "Depending on the age of the testtaker, a special code input mode might be more suitable.",
+          "type": "string",
+          "enum": [
+            "TEXT_FIELD",
+            "KEYPAD_SYMBOLS",
+            "KEYPAD_SYMBOLS_ALT",
+            "KEYPAD_NUMBERS"
+          ],
+          "default": "TEXT_FIELD"
+        },
+        "codeInputFixLength": {
+          "description": "If greater than 2 (minimum length is 3), the UI responses during code input in an appropriate way.",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
         }
       },
       "additionalProperties": false,
