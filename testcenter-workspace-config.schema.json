@@ -29,28 +29,28 @@
       }
     },
     "bookletConfigs": {
-      "description": "List of all configuration sets that can be used in that workspace.",
+      "description": "List of configuration sets that can be used in that workspace by booklets. If incomplete, the default or system wide configuration will be overwritten only partly.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/bookletConfig"
       }
     },
     "groupMonitorProfiles": {
-      "description": "List of all settings that can be used in that workspace for group monitors.",
+      "description": "List of property sets that can be used in that workspace by group monitors. If incomplete, the default or system wide profile will be overwritten only partly.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/groupMonitorProfile"
       }
     },
     "loginDesigns": {
-      "description": "Sets of parameters to be applied to a test design after logging in. If incomplete, the default or system wide design will be overwritten only partly.",
+      "description": "List of property sets to be applied to a testtaker after logging in. If incomplete, the default or system wide design will be overwritten only partly.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/loginDesign"
       }
     },
     "publicBooklets": {
-      "description": "These booklets are listed on start page of the testcenter and do not need credentials. This can be used for demo items or open system checks.",
+      "description": "The logins in that list grant free access to one or more booklets. This can be used for demo items or system checks.",
       "type": "array",
       "items": {
         "type": "object",
@@ -115,7 +115,7 @@
           "minLength": 1
         },
         "useAsDefault": {
-          "description": "If true, this config will be applied to all booklets without explicit config reference.",
+          "description": "If true, this config will be applied to all booklets without explicit config reference (language specific).",
           "type": "boolean",
           "default": false
         },
@@ -123,7 +123,7 @@
           "$ref": "#/$defs/languageCode"
         },
         "textReplacementFile": {
-          "description": "Files to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
+          "description": "File to be used for text replacement (format standard i18n). If not found, the default text will be used instead.",
           "type": "string",
           "minLength": 1
         },
@@ -194,7 +194,7 @@
               "type": "boolean",
               "default": false
             },
-            "sendBufferTime": {
+            "bufferTimeSpan": {
               "description": "Time settings for the controller to wait before sending data to the backend (ms).",
               "type": "object",
               "properties": {
@@ -396,7 +396,7 @@
             "MIN"
           ]
         },
-        "presentBookletList": {
+        "showBookletList": {
           "description": "Offers the booklets of the group to have a look at the test content.",
           "type": "string",
           "enum": [
@@ -407,11 +407,12 @@
           "default": "OFF"
         },
         "autoselectNextBlock": {
-          "description": "If true, the next block will be selected after a block operation. If no, the current block remains selected to prevent unintended operations.",
+          "description": "If true, the next block will be selected after a block operation. If false, the current block remains selected to prevent unintended operations.",
           "type": "boolean",
           "default": false
         },
         "testFilters": {
+          "description": "These filters shorten the number of rows for better UX.",
           "type": "object",
           "properties": {
             "pending": {
@@ -497,14 +498,16 @@
           "minLength": 1
         },
         "useAsDefaultFor": {
-          "description": "Scope this design is to be used as default. Any incomplete design will overwrite this default only partly.",
+          "description": "The scope this design is to be used as default. Any incomplete design will overwrite this default only partly.",
           "type": "string",
           "enum": [
             "GROUP_MONITOR",
             "STUDY_MONITOR",
             "RUN",
-            "SYSTEM_CHECK"
-          ]
+            "SYSTEM_CHECK",
+            "NO_DEFAULT"
+          ],
+          "default": "NO_DEFAULT"
         },
         "textReplacementFiles": {
           "description": "List of file names to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
@@ -514,7 +517,7 @@
           }
         },
         "styling": {
-          "description": "Every testcenter installation holds sets of design parameters. With this property, you refer to one of these sets.",
+          "description": "Every testcenter installation holds sets of design parameters (theming). With this property, you switch to one of these sets.",
           "type": "string",
           "enum": [
             "PRIMARY",
