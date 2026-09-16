@@ -4,7 +4,7 @@
   "license": "CC0-1.0",
   "description": "Specification for central parameters of one Testcenter workspace.",
   "scripts": {
-    "validate-schema": "test-schema test acp-scale-derived.schema.json",
+    "validate-schema": "test-schema test testcenter-workspace-config.schema.json",
     "async_generate": "asyncapi generate fromTemplate asyncapi.yaml @asyncapi/html-template --param config=asyncapi.config.json -o ./public --force-write --use-new-generator",
     "generate_docs": "npm run async_generate && cat add.css >> ./public/css/global.min.css"
   },
@@ -19,6 +19,13 @@
   "devDependencies": {
     "@asyncapi/cli": "^4.1.1",
     "@asyncapi/html-template": "^3.1.0",
-    "@iqbspecs/validate-json": "^0.4.0"
+    "@iqbspecs/validate-json": "^0.4.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "overrides": {
+    "@asyncapi/generator-react-sdk": {
+      "react": "17.0.2"
+    }
   }
 }
