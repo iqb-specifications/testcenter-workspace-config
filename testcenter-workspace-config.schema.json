@@ -42,6 +42,13 @@
       "items": {
         "$ref": "#/$defs/groupMonitorProfile"
       }
+    },
+    "loginDesigns": {
+      "description": "List of all settings that can be used in that workspace for group monitors.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/loginDesign"
+      }
     }
   },
   "required": [
@@ -78,9 +85,14 @@
       "type": "object",
       "properties": {
         "id": {
-          "description": "ID to be used in booklets",
+          "description": "ID to be used in booklets.",
           "type": "string",
           "minLength": 1
+        },
+        "useAsDefault": {
+          "description": "If true, this config will be applied to all booklets without explicit config reference.",
+          "type": "boolean",
+          "default": false
         },
         "language": {
           "$ref": "#/$defs/languageCode"
@@ -309,9 +321,14 @@
       "description": "Settings for the view 'group monitor'.",
       "properties": {
         "id": {
-          "description": "ID to be used in logins",
+          "description": "ID to be used in logins.",
           "type": "string",
           "minLength": 1
+        },
+        "useAsDefault": {
+          "description": "If true, this profile will be applied to all group monitors without explicit profile reference.",
+          "type": "boolean",
+          "default": false
         },
         "columns": {
           "description": "Show columns in main table",
@@ -418,6 +435,73 @@
             }
           },
           "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
+    },
+    "loginDesign": {
+      "description": "A set of parameters to be applied to a test design after logging in. If incomplete, the default or system wide design will be overwritten only partly.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID to be used in logins.",
+          "type": "string",
+          "minLength": 1
+        },
+        "useAsDefaultFor": {
+          "description": "Scope this design is to be used as default. Any uncomplete design will overwrite this default only partly.",
+          "type": "string",
+          "enum": [
+            "GROUP_MONITOR",
+            "STUDY_MONITOR",
+            "RUN",
+            "SYSTEM_CHECK"
+          ]
+        },
+        "styling": {
+          "description": "Every testcenter installation holds sets of design parameters. With this property, you refer to one of these sets.",
+          "type": "string",
+          "enum": [
+            "PRIMARY",
+            "SECONDARY",
+            "ADULT"
+          ]
+        },
+        "images": {
+          "description": "These image files will replace default or system wide images.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "targetSlot": {
+                "description": "Page slot where the image is placed into.",
+                "type": "string",
+                "enum": [
+                  "APPLICATION_LOGO",
+                  "CODE_INPUT_PROMPT",
+                  "CODE_INPUT_COMPANION",
+                  "LOGIN_FORM",
+                  "STARTER_COMPANION",
+                  "STARTER_CARD_DONE",
+                  "LOADING_PROGRESS",
+                  "CONFIRM_DIALOG"
+                ]
+              },
+              "filename": {
+                "description": "Name of the image file to be loaded in the workspace.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "targetSlot",
+              "filename"
+            ]
+          }
         }
       },
       "additionalProperties": false,
