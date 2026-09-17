@@ -1,5 +1,5 @@
 {
-  "$id": "testcenter-workspace-config@0.1",
+  "$id": "testcenter-workspace-config@0.2",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Testcenter: Workspace-Config",
   "description": "Specification for central parameters of one Testcenter workspace.",
@@ -55,13 +55,21 @@
       "items": {
         "type": "object",
         "properties": {
-          "lang": {
-            "$ref": "#/$defs/languageCode"
-          },
           "name": {
-            "description": "The name will be used as title or button label.",
-            "type": "string",
-            "minLength": 3
+            "description": "Language tagged name of the login",
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/languageTaggedString"
+            },
+            "minItems": 1
+          },
+          "description": {
+            "description": "Language tagged description of the login",
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/languageTaggedString"
+            },
+            "minItems": 1
           },
           "loginName": {
             "description": "Login to be used. This login must be found in any testtaker file of the workspace.",
@@ -496,17 +504,10 @@
           "type": "string",
           "minLength": 1
         },
-        "useAsDefaultFor": {
-          "description": "The scope this design is to be used as default. Any incomplete design will overwrite this default only partly.",
-          "type": "string",
-          "enum": [
-            "GROUP_MONITOR",
-            "STUDY_MONITOR",
-            "RUN",
-            "ALL",
-            "NO_DEFAULT"
-          ],
-          "default": "NO_DEFAULT"
+        "useAsDefault": {
+          "description": "Default for all 'RUN'-Logins of the workspace. Any 'RUN'-Login could still reference a different configuration: the default 'RUN'-Login will be effective as far a parameter is not set.",
+          "type": "boolean",
+          "default": false
         },
         "textReplacementFiles": {
           "description": "List of file names to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
@@ -524,6 +525,23 @@
             "ADULT"
           ],
           "default": "SECONDARY"
+        },
+        "codeInputMode": {
+          "description": "Depending on the age of the testtaker, a special code input mode might be more suitable.",
+          "type": "string",
+          "enum": [
+            "TEXT_FIELD",
+            "KEYPAD_SYMBOLS",
+            "KEYPAD_SYMBOLS_ALT",
+            "KEYPAD_NUMBERS"
+          ],
+          "default": "TEXT_FIELD"
+        },
+        "codeInputFixLength": {
+          "description": "If greater than 2 (minimum length is 3), the UI responses during code input in an appropriate way.",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
         },
         "images": {
           "description": "These image files will replace default or system wide images.",
@@ -557,23 +575,6 @@
               "filename"
             ]
           }
-        },
-        "codeInputMode": {
-          "description": "Depending on the age of the testtaker, a special code input mode might be more suitable.",
-          "type": "string",
-          "enum": [
-            "TEXT_FIELD",
-            "KEYPAD_SYMBOLS",
-            "KEYPAD_SYMBOLS_ALT",
-            "KEYPAD_NUMBERS"
-          ],
-          "default": "TEXT_FIELD"
-        },
-        "codeInputFixLength": {
-          "description": "If greater than 2 (minimum length is 3), the UI responses during code input in an appropriate way.",
-          "type": "integer",
-          "minimum": 0,
-          "default": 0
         }
       },
       "additionalProperties": false,

@@ -179,3 +179,26 @@ Die Liste der bedingten Filter wird für jede Zeile ausgewertet. Ergibt einer de
   * `EQUALS`, `EQUALS_REGEX`, `EQUALS_NOT`, `EQUALS_REGEX_NOT`: Die Gleichheit wird überprüft (und ggf. negiert). Es erfolgt ein genauer Vergleich, was durch einen [regulären Ausdruck](https://www.w3schools.com/js/js_regexp.asp) genau gesteuert werden kann. Bei einem regulären Ausdruck kommt die JavaScript-Funktion 'match()' zur Anwendung. Das Funktionsergebnis 'null' wird als `false` und alles andere als `true` interpretiert.
   * `CONTAINS`, `CONTAINS_NOT`: Eine einfache Formulierung dafür, ob der Quellwert einen bestimmten Wert *enthält* (bzw. nicht enthält). Hierbei wird genau verglichen, d. h. auch Groß- und Kleinschreibung ist wichtig. Wer hier gezielter steuern möchte, nehme einen regulären Ausdruck.
 * `methodParameter`: Dies ist der Wert, mit dem verglichen werden soll.
+
+## Design-Konfiguration für Test-Logins
+
+Mit dem Datenblock `loginDesigns` werden Konfigurationen für die Durchführung von Tests definiert. Dies betrifft alle Modi eines Logins mit dem Präfix `RUN-`.
+
+* `id`: Über diesen Schlüssel wird die Konfiguration innerhalb einer Login-Xml referenziert und damit wirksam.
+* `useAsDefault`: Wenn dieser Schalter auf `true` gesetzt ist, dann wirken alle Einstellungen auf alle 'RUN'-Logins. In einem 'RUN'-Login kann durchaus noch eine abweichende Konfiguration referenziert werden. Wenn dort aber Parameter nicht spezifiziert sind, dann gilt wieder die Default-Konfiguration.
+* `textReplacementFiles`:  Das Login erhält je nach erkannter oder gewählter Sprache passende Textersetzungen.
+* `styling`: In einer Testcenter-Installation sind drei Varianten des Grunddesigns hinterlegt. Dies betrifft das grundsätzliche Layout, Farben, teilweise die Navigation usw. Hintergrund sind die unterschiedlichen Anforderungen für die Altersgruppen `PRIMARY` (Primarstufe), `SECONDARY` (Sekundarstufe I) und `ADULT` (Erwachsene). Mit der Angabe eines der drei Werte wird die Variante des Designs gewählt.
+* `codeInputMode`, `codeInputFixLength`: Bei einem zweistufigen Anmeldeprozess erfolgt nach dem erfolgreichen Login die Eingabe eines personenspezifischen Codes. Da dies mitunter die Testpersonen durchführen, gibt es je nach Zielgruppe unterschiedliche Modi der Eingabe: normal über die Tastatur des Endgerätes (`TEXT_FIELD`) oder über verschiedene Varianten von Buttons (`KEYPAD_SYMBOLS`, `KEYPAD_SYMBOLS_ALT`, `KEYPAD_NUMBERS`). Außerdem kann man die Länge des Codes angeben. Auf diese Weise kann die UI besser Hinweise geben. Mindestwert für die fixe Anzahl Zeichen ist '3'. Wenn der Wert kleiner ist, gibt es keinen UI-Einfluss.
+
+### Parameter für `images`
+
+Das Array `images` enthält eine Liste von Bilddateien, die für das User Interface verwendet werden sollen. Sie ersetzen die Systemeinstellungen auf Ebene der Testcenter-Installation. Jedes Objekt in der Liste hat folgende Parameter:
+
+* `targetSlot`: Das Layout enthält Platzhalter für Bilder, die über einen Key identifiziert werden. Mögliche Werte sind `APPLICATION_LOGO`, `CODE_INPUT_PROMPT`, `CODE_INPUT_COMPANION`, `LOGIN_FORM`, `STARTER_COMPANION`, `STARTER_CARD_DONE`, `LOADING_PROGRESS`, `CONFIRM_DIALOG`.
+* `filename`: Name der Bilddatei, die in den Slot gesetzt werden soll. Diese muss im Workspace gespeichert sein.
+
+## Öffentlich erreichbare Booklets
+
+Mit dem Datenblock `publicBooklets` kann eine Liste von Logins übergeben werden, die zu frei zugänglichen Booklets führen. Die Logins werden ganz normal angelegt (ohne Kennwort), günstigerweise mit dem Modus `RUN-DEMO` oder `RUN-SIMULATION`. Eine Deklaration der Logins in der Workspace-Config gibt dem Testcenter die Möglichkeit, einen Sprung zu diesen Booklets auf der Startseite anzubieten. So sind Demo-Aufgaben oder offene System-Checks sofort erreichbar.
+
+Jedes Objekt muss einen `name` und einen `loginName` enthalten. `name` und die optionale `description` können mehrsprachig hinterlegt werden und unterstützen die Sprung-Gestaltung durch das Testcenter.
