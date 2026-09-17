@@ -115,17 +115,16 @@
           "minLength": 1
         },
         "useAsDefault": {
-          "description": "If true, this config will be applied to all booklets without explicit config reference (language specific).",
+          "description": "Default for all booklets of the workspace. Any booklet could still reference a different configuration: the default bookletConfig will be effective as far a parameter is not set.",
           "type": "boolean",
           "default": false
         },
-        "language": {
-          "$ref": "#/$defs/languageCode"
-        },
-        "textReplacementFile": {
-          "description": "File to be used for text replacement (format standard i18n). If not found, the default text will be used instead.",
-          "type": "string",
-          "minLength": 1
+        "textReplacementFiles": {
+          "description": "List of files to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageTaggedString"
+          }
         },
         "browser": {
           "description": "Browser settings",
@@ -184,8 +183,8 @@
               ],
               "default": "RICH"
             },
-            "lockTestOnTermination": {
-              "description": "If true, the test will be locked by termination request to prevent any changes.",
+            "lockBookletOnTermination": {
+              "description": "If true, the booklet will be locked by termination request to prevent any changes.",
               "type": "boolean",
               "default": false
             },
@@ -243,55 +242,55 @@
               ],
               "default": "UNIT_LABEL"
             },
-            "mainForwardButton": {
+            "unitNavControl": {
+              "description": "Design of a control with two small navigation arrows and a title",
+              "type": "string",
+              "enum": [
+                "OFF",
+                "WITH_INDEX",
+                "WITH_LABEL"
+              ],
+              "default": "WITH_UNIT_INDEX"
+            },
+            "singleForwardButton": {
               "description": "Behavoir of the primary navigation button: Forward",
               "type": "string",
               "enum": [
-                "HIDDEN",
-                "DYNAMIC",
-                "UNITS",
-                "PAGES"
+                "OFF",
+                "AUTO",
+                "UNIT",
+                "PAGE"
               ],
-              "default": "HIDDEN"
+              "default": "OFF"
             },
-            "mainBackwardButton": {
+            "singleBackwardButton": {
               "description": "Behavoir of the primary navigation button: Backward",
               "type": "string",
               "enum": [
-                "HIDDEN",
-                "DYNAMIC",
-                "UNITS",
-                "PAGES"
+                "OFF",
+                "AUTO",
+                "UNIT",
+                "PAGE"
               ],
-              "default": "HIDDEN"
-            },
-            "unitLabel": {
-              "description": "Label to represent the unit",
-              "type": "string",
-              "enum": [
-                "HIDDEN",
-                "INDEX",
-                "LABEL"
-              ],
-              "default": "INDEX"
+              "default": "OFF"
             },
             "unitPages": {
               "description": "Elements for the pages of an unit",
               "type": "object",
               "properties": {
-                "pageLabel": {
-                  "description": "Label to represent the unit page(s)",
+                "pageNavControlContent": {
+                  "description": "Content/label of a page navigation control",
                   "type": "string",
                   "enum": [
-                    "HIDDEN",
-                    "INDEX",
-                    "LABEL",
-                    "LIST"
+                    "OFF",
+                    "WITH_INDEX",
+                    "WITH_LABEL",
+                    "AS_LIST"
                   ],
-                  "default": "INDEX"
+                  "default": "WITH_INDEX"
                 },
-                "navigationButtons": {
-                  "description": "If true, the unit page labels act as buttons for navigation between pages.",
+                "pageNavControlButtons": {
+                  "description": "If true, the page navigation control is set between arrow buttons for navigation.",
                   "type": "boolean",
                   "default": true
                 },
@@ -359,6 +358,37 @@
           "type": "boolean",
           "default": false
         },
+        "textReplacementFiles": {
+          "description": "List of files to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageTaggedString"
+          }
+        },
+        "detailView": {
+          "type": "string",
+          "description": "Number of details in view.",
+          "enum": [
+            "MAX",
+            "MEDIUM",
+            "MIN"
+          ]
+        },
+        "showBookletList": {
+          "description": "Offers the booklets of the group to have a look at the test content.",
+          "type": "string",
+          "enum": [
+            "OFF",
+            "BUTTONS_LIST",
+            "BUTTONS_LIST_COLLAPSED"
+          ],
+          "default": "OFF"
+        },
+        "autoselectNextBlock": {
+          "description": "If true, the next block will be selected after a block operation. If false, the current block remains selected to prevent unintended operations.",
+          "type": "boolean",
+          "default": false
+        },
         "columns": {
           "description": "Show columns in main table",
           "type": "object",
@@ -386,30 +416,6 @@
             }
           },
           "additionalProperties": false
-        },
-        "detailView": {
-          "type": "string",
-          "description": "Number of details in view.",
-          "enum": [
-            "MAX",
-            "MEDIUM",
-            "MIN"
-          ]
-        },
-        "showBookletList": {
-          "description": "Offers the booklets of the group to have a look at the test content.",
-          "type": "string",
-          "enum": [
-            "OFF",
-            "BUTTONS_LIST",
-            "BUTTONS_LIST_COLLAPSED"
-          ],
-          "default": "OFF"
-        },
-        "autoselectNextBlock": {
-          "description": "If true, the next block will be selected after a block operation. If false, the current block remains selected to prevent unintended operations.",
-          "type": "boolean",
-          "default": false
         },
         "testFilters": {
           "description": "These filters shorten the number of rows for better UX.",
@@ -475,13 +481,6 @@
             }
           },
           "additionalProperties": false
-        },
-        "textReplacementFiles": {
-          "description": "List of files to be used for text replacement (format standard i18n). If the file is not found for an requested language, the default text will be used instead.",
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/languageTaggedString"
-          }
         }
       },
       "additionalProperties": false,
@@ -504,7 +503,7 @@
             "GROUP_MONITOR",
             "STUDY_MONITOR",
             "RUN",
-            "SYSTEM_CHECK",
+            "ALL",
             "NO_DEFAULT"
           ],
           "default": "NO_DEFAULT"
